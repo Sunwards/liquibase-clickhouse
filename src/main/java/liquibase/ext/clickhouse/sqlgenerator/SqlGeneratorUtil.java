@@ -26,7 +26,7 @@ import liquibase.ext.clickhouse.params.ClusterConfig;
 import liquibase.database.Database;
 import liquibase.sql.Sql;
 import liquibase.sqlgenerator.SqlGeneratorFactory;
-import liquibase.statement.core.RawSqlStatement;
+import liquibase.statement.core.RawParameterizedSqlStatement;
 
 class SqlGeneratorUtil {
 
@@ -34,7 +34,7 @@ class SqlGeneratorUtil {
     SqlGeneratorFactory sqlGeneratorFactory = SqlGeneratorFactory.getInstance();
     List<Sql> allSqlStatements = new ArrayList<>();
     for (String statement : statements) {
-      RawSqlStatement rawSqlStatement = new RawSqlStatement(statement);
+      RawParameterizedSqlStatement rawSqlStatement = new RawParameterizedSqlStatement(statement);
       Sql[] perStatement = sqlGeneratorFactory.generateSql(rawSqlStatement, database);
       allSqlStatements.addAll(Arrays.asList(perStatement));
     }

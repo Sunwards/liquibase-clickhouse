@@ -27,7 +27,7 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.ClickHouseContainer;
+import org.testcontainers.clickhouse.ClickHouseContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.org.apache.commons.io.output.NullWriter;
@@ -37,7 +37,7 @@ public class ClickHouseTest {
 
   @Container
   private static ClickHouseContainer clickHouseContainer =
-      new ClickHouseContainer("clickhouse/clickhouse-server:22.3.8.39");
+      new ClickHouseContainer("clickhouse/clickhouse-server:24.8.2.3");
 
   @Test
   void canInitializeLiquibaseSchema() {

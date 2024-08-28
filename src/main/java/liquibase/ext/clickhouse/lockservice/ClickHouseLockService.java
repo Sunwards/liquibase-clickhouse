@@ -30,7 +30,7 @@ import liquibase.executor.Executor;
 import liquibase.executor.ExecutorService;
 import liquibase.lockservice.StandardLockService;
 import liquibase.logging.Logger;
-import liquibase.statement.core.RawSqlStatement;
+import liquibase.statement.core.RawParameterizedSqlStatement;
 
 public class ClickHouseLockService extends StandardLockService {
 
@@ -54,7 +54,7 @@ public class ClickHouseLockService extends StandardLockService {
             String.format(
                 "SELECT COUNT(*) FROM `%s`.%s",
                 database.getDefaultSchemaName(), database.getDatabaseChangeLogLockTableName());
-        int nbRows = getExecutor().queryForInt(new RawSqlStatement(query));
+        int nbRows = getExecutor().queryForInt(new RawParameterizedSqlStatement(query));
         isLockTableInitialized = nbRows > 0;
       } catch (LiquibaseException e) {
         if (getExecutor().updatesDatabase()) {
@@ -68,14 +68,14 @@ public class ClickHouseLockService extends StandardLockService {
   }
 
   @Override
-  public boolean hasDatabaseChangeLogLockTable() {
+  public boolean isDatabaseChangeLogLockTableCreated() {
     boolean hasTable = false;
     try {
       String query =
           String.format(
               "SELECT ID FROM `%s`.%s LIMIT 1",
               database.getDefaultSchemaName(), database.getDatabaseChangeLogLockTableName());
-      getExecutor().execute(new RawSqlStatement(query));
+      getExecutor().execute(new RawParameterizedSqlStatement(query));
       hasTable = true;
     } catch (DatabaseException e) {
       getLogger()

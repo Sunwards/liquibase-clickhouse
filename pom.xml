@@ -65,17 +65,17 @@
     <properties>
         <encoding>UTF-8</encoding>
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <clickhouse-jdbc.version>0.3.2</clickhouse-jdbc.version>
-        <liquibase.version>4.15.0</liquibase.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <clickhouse-jdbc.version>0.6.4</clickhouse-jdbc.version>
+        <liquibase.version>4.29.1</liquibase.version>
         <junit.version>5.4.0</junit.version>
-        <test-containers.version>1.17.3</test-containers.version>
+        <test-containers.version>1.20.1</test-containers.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
         <maven-plugin-plugin.version>3.6.0</maven-plugin-plugin.version>
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
         <license-maven-plugin.version>2.0.0</license-maven-plugin.version>
-        <maven-shade-plugin.version>3.2.0</maven-shade-plugin.version>
+        <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
         <fmt-maven-plugin.version>2.9.1</fmt-maven-plugin.version>
         <impsort-maven-plugin.version>1.4.1</impsort-maven-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
@@ -83,6 +83,7 @@
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
         <snakeyaml.version>1.28</snakeyaml.version>
         <typesafe-config.version>1.4.1</typesafe-config.version>
+        <lz4.version>1.8.0</lz4.version>
     </properties>
 
     <dependencies>
@@ -124,6 +125,11 @@
             <groupId>com.typesafe</groupId>
             <artifactId>config</artifactId>
             <version>${typesafe-config.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.lz4</groupId>
+            <artifactId>lz4-java</artifactId>
+            <version>${lz4.version}</version>
         </dependency>
     </dependencies>
 
@@ -226,6 +232,9 @@
                         <configuration>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>shaded</shadedClassifierName>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
                             <relocations>
                                 <relocation>
                                     <pattern>com.</pattern>
@@ -238,10 +247,6 @@
                                 <relocation>
                                     <pattern>org.</pattern>
                                     <shadedPattern>shaded.liquibase.org.</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>ru.</pattern>
-                                    <shadedPattern>shaded.liquibase.ru.</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
@@ -272,6 +277,13 @@
                 <groupId>net.revelc.code</groupId>
                 <artifactId>impsort-maven-plugin</artifactId>
                 <version>${impsort-maven-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.plexus</groupId>
+                        <artifactId>plexus-utils</artifactId>
+                        <version>3.5.1</version>
+                    </dependency>
+                </dependencies>
                 <configuration>
                     <removeUnused>true</removeUnused>
                     <groups>java.,javax.,liquibase.ext.clickhouse.</groups>

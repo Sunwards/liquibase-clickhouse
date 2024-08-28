@@ -1,0 +1,1 @@
+liquibase.ext.clickhouse.datatype.core.StringDataTypeClickHouse
